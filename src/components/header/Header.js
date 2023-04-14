@@ -5,10 +5,22 @@ import styles from "./Header.module.scss";
 import {Link} from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa"
 import { HiOutlineMenuAlt3 } from "react-icons/hi"
+import React, { useState } from 'react'
 
 
 const Header = () => {
-  const [showMenu, setShowMenu]=useState(False);
+
+  const [showMenu, setShowMenu]=useState(false)
+  const toggleMenu = () => {
+    setShowMenu(!showMenu)
+  }
+  const hideMenu = () => {
+    setShowMenu(false)
+  }
+  const hideMenu = () => {
+    setShowMenu(false)
+  }
+
   const logo = (
     <div className={styles.logo}>
       <Link to="/">
@@ -26,7 +38,6 @@ const Header = () => {
           <FaShoppingCart size={20}/>
           <p>0</p>
         </Link>
-
       </span>
 
     )
