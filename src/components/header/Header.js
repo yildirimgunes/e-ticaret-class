@@ -45,9 +45,9 @@ const Header = () => {
     <header>
       <div className={styles.header}>
         {logo}
-        <nav className={showMenu ? "${styles['show-nav']}" : "${styles['hide-nav']}"}>
-          <div>
-
+        <nav className={showMenu ? '${styles["show-nav"]}' : '${styles["hide-nav"]}'}>
+          <div className = { showMenu ? '${styles["nav-wrapper"]} ${styles["show-nav-wrapper"]}' : 
+          '${styles["nav-wrapper"]}'} onClick={hideMenu}>
           </div>
           <ul>
             <li>
@@ -69,7 +69,7 @@ const Header = () => {
         </nav>
         <div classsName={styles["menu-icon"]}>
           {cart}
-          <HiOutlineMenuAlt3 size={28}/>
+          <HiOutlineMenuAlt3 size={28} onClick={toggleMenu}/>
         </div>
       </div>
     </header>
