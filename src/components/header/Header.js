@@ -1,25 +1,25 @@
-//// tüm linklerin olduğu başlık kısmı
+// tüm linklerin olduğu başlık kısmı
 //import { DomPlatform } from 'chart.js';
-import React from 'react'
+//import React from "react";
 import styles from "./Header.module.scss";
 import {Link} from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa"
-import { HiOutlineMenuAlt3 } from "react-icons/hi"
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { FaShoppingCart} from "react-icons/fa";
+import { HiOutlineMenuAlt3 } from "react-icons/hi";
+
 
 
 const Header = () => {
 
   const [showMenu, setShowMenu]=useState(false)
+
   const toggleMenu = () => {
     setShowMenu(!showMenu)
   }
   const hideMenu = () => {
     setShowMenu(false)
   }
-  const hideMenu = () => {
-    setShowMenu(false)
-  }
+  
 
   const logo = (
     <div className={styles.logo}>
@@ -45,7 +45,10 @@ const Header = () => {
     <header>
       <div className={styles.header}>
         {logo}
-        <nav>
+        <nav className={showMenu ? "${styles['show-nav']}" : "${styles['hide-nav']}"}>
+          <div>
+
+          </div>
           <ul>
             <li>
               <Link to="/">Home</Link>
@@ -70,9 +73,10 @@ const Header = () => {
         </div>
       </div>
     </header>
-
   )
+
 
 }
 
 export default Header
+
