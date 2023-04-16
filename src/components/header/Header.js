@@ -2,18 +2,32 @@
 //import { DomPlatform } from 'chart.js';
 //import React from "react";
 import styles from "./Header.module.scss";
-import {Link, NavLink} from "react-router-dom";
-import React, { useState } from 'react';
+import {Link, NavLink, useNavigate} from "react-router-dom";
+import React, { useState } from "react";
 import { FaShoppingCart, FaTimes} from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi"
-
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/config"
+import { toast } from "react-toastify"
 const Header = () => {
 
-  const [showMenu, setShowMenu] = useState(false)
+  const [showMenu, setShowMenu] = useState(false);
 
-  const toggleMenu = () => {setShowMenu(!showMenu)}
-  const hideMenu = () => {setShowMenu(false)}
-  
+  const navigate = useNavigate();
+
+  const toggleMenu = () => {
+    setShowMenu(!showMenu)
+  }
+
+  const hideMenu = () => {
+    setShowMenu(false)
+  }
+  const logoutuser = () => {
+    signOut(auth).then(()=> {
+      toast.success("Log out successfully..")
+      navigate("/")
+    })
+  }
 
   const logo = (
     <div className={styles.logo}>
@@ -22,7 +36,6 @@ const Header = () => {
           e<span>Shop</span>.
         </h2>
       </Link>
-
     </div>
   )
     const cart= (
@@ -35,20 +48,20 @@ const Header = () => {
       </span>
     )
   
-  const activeLink=(({isActive})=>(isActive ? '$ {styles.active}' : ""))
+  const activeLink=(({isActive})=>(isActive ? `${styles.active}` : ""))
   return (
     <header>
       <div className={styles.header}>
         {logo}
-        <nav className = { showMenu ? '$ {styles["show-nav"]}' : '$ {styles["hide-nav"]}'}>
-          <div className = { showMenu ? '$ {styles["nav-wrapper"]} $ {styles["show-nav-wrapper"]}' : '$ {styles["nav-wrapper"]}'} onClick={hideMenu}></div>
+        <nav className={ showMenu ? `${styles["show-nav"]}` : `${styles["hide-nav"]}`}>
+        <div className={ showMenu ? `${styles["nav-wrapper"]} ${styles["show-nav-wrapper"]}` : `${styles["nav-wrapper"]}`} onClick={hideMenu}></div>
           <ul onClick={hideMenu}>
             <li className={styles["logo-mobile"]}>
               {logo}
               <FaTimes size={22} color="#fff" onClick={hideMenu}/>
             </li>
             <li>
-              <NavLink to="/" className= {activeLink} >Home</NavLink>
+              <NavLink to="/" className= {activeLink}>Home</NavLink>
             </li>
             <li>
               <NavLink to="/contact" className= {activeLink} >Contact us</NavLink>
