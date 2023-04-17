@@ -9,6 +9,7 @@ import { HiOutlineMenuAlt3 } from "react-icons/hi"
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/config"
 import { toast } from "react-toastify"
+
 const Header = () => {
 
   const [showMenu, setShowMenu] = useState(false);
@@ -22,13 +23,15 @@ const Header = () => {
   const hideMenu = () => {
     setShowMenu(false)
   }
-  const logoutuser = () => {
-    signOut(auth).then(()=> {
+  
+  const logoutUser=()=>{
+    signOut(auth).then(()=>{
       toast.success("Log out successfully..")
       navigate("/")
-    })
+    }).catch((error)=>{
+      toast.error(error.message)
+    });
   }
-
   const logo = (
     <div className={styles.logo}>
       <Link to="/">
@@ -71,6 +74,7 @@ const Header = () => {
             <span className={styles.links}>
               <NavLink to="/login" className= {activeLink} >Login</NavLink>
               <NavLink to="/order-history" className= {activeLink} >My Orders</NavLink>
+              <NavLink to="/" onClick={logoutUser}>Logout</NavLink>
             </span>
             {cart}
           </div>
