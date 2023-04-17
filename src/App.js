@@ -6,12 +6,14 @@ import {Header, Footer} from "./components"
 //import Contact from './pages/contact/Contact'
 //import Home from './pages/home/Home'
 import {Contact, Home, Login, Register, Reset} from "./pages"
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
     <>
       <BrowserRouter>
+      <ToastContainer/>
       <Header/>
       <Routes>
         <Route path = "/" element={<Home/>}/>
