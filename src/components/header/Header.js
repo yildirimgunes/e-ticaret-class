@@ -10,7 +10,8 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase/config"
 import { toast } from "react-toastify"
 import { useDispatch } from "react-redux";
-import { selectUserName, SET_ACTIVE_USER } from "../../redux/slice/authSlice";
+import { selectUserName, SET_ACTIVE_USER, REMOVE_ACTIVE_USER } from "../../redux/slice/authSlice";
+import { ShowOnLogin,ShowOnLogout } from "../../hiddenLink"
 
 const Header = () => {
 
@@ -28,7 +29,7 @@ const Header = () => {
           const u1=user.email.slice(0, user.email.lastIndexOf
           ("@"))
           const uName= u1.charAt(0).toUpperCase () + u1.slice(1)
-          setDisplayName (uName)
+          setDisplayName(uName)
         }
         else {
           //const uid=user.uid
@@ -46,6 +47,7 @@ const Header = () => {
       }
       else{
         setDisplayName("")
+        dispatch (REMOVE_ACTIVE_USER())
       }
     })
   },[dispatch, displayName])
@@ -103,15 +105,22 @@ const Header = () => {
               <NavLink to="/contact" className= {activeLink} >Contact us</NavLink>
             </li>
           </ul>
-          <div  className={styles["header-right"]} onClick = {hideMenu}>
+          <div  className={styles["header-right"]} onClick = 
+          {hideMenu}>
             <span className={styles.links}>
-              <NavLink to="/login" className= {activeLink} >Login</NavLink>
+              <ShowOnLogout>
+                <NavLink to="/login" className= {activeLink} >Login</
+                NavLink>
+              </ShowOnLogout>
+              <ShowOnLogin>
               <a href="#home" style={{color:"#ff7722"}}>
                 <FaUserCircle size={16}/>&nbsp;
+                Hi;{displayName}
               </a>
               <NavLink to="/order-history" className= {activeLink} 
               >My Orders</NavLink>
               <NavLink to="/" onClick={logoutUser}>Logout</NavLink>
+              </ShowOnLogin> 
             </span>
             {cart}
           </div>
