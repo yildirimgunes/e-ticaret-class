@@ -1,5 +1,7 @@
 ////admin olmayıp da admin sayfasına erişmek isteyenler için permission denied sayfası
 import React from 'react'
+import {useSelector} from "react-redux"
+import {selectEmail} from "../../redux/slice/authSlice"
 
 const AdminOnlyRoute = () => {
   return (
@@ -7,4 +9,11 @@ const AdminOnlyRoute = () => {
   )
 }
 
+export const AdminOnlyLink= ({children})=> {
+  const userEmail = useSelector (selectEmail)
+  if(userEmail==="yildirimgunes1973@gmail.com"){
+    return children
+  }
+  return null
+}
 export default AdminOnlyRoute
