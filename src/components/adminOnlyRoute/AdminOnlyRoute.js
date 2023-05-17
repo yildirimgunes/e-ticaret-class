@@ -1,11 +1,27 @@
 ////admin olmayıp da admin sayfasına erişmek isteyenler için permission denied sayfası
 import React from 'react'
 import {useSelector} from "react-redux"
+import { Link } from 'react-router-dom'
 import {selectEmail} from "../../redux/slice/authSlice"
 
-const AdminOnlyRoute = () => {
+const AdminOnlyRoute = ({children}) => {
+  const userEmail=useSelector(selectEmail)
+  if(userEmail==="yildirimgunes1973@gmail.com"){
+    return children
+  }
   return (
-    <div>AdminOnlyRoute</div>
+    <section style={{height:"80 vh"}}>
+      <div className="container">
+        <h2>Permission Denied</h2>
+        <p>This page can only be view by an Admin user.</p>
+        <br/>
+        <Link to="/">
+          <button className>
+            
+          </button>
+        </Link>
+      </div>
+    </section>
   )
 }
 
