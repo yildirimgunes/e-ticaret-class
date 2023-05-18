@@ -100,11 +100,13 @@ const Header = () => {
               <FaTimes size={22} color="#fff" onClick={hideMenu}/>
             </li>
             <AdminOnlyLink>
+              <Link to="/admin/home">
               <li>
                 <button className="--btn --btn-primary">
                   Admin
                 </button>
               </li>
+              </Link>
             </AdminOnlyLink>
             <li>
               <NavLink to="/" className= {activeLink}>Home</NavLink>
