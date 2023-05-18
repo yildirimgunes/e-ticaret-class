@@ -1,6 +1,4 @@
 //// admin sayfası
-import { DomPlatform } from 'chart.js'
-import { Router } from 'express'
 import React from 'react'
 import {Route, Routes} from "react-router-dom"
 import AddProduct from '../../components/admin/addProduct/AddProduct'
