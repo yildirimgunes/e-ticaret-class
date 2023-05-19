@@ -6,7 +6,7 @@ import {useSelector} from "react-redux"
 import { selectUserName } from '../../../redux/slice/authSlice'
 import { NavLink } from 'react-router-dom'
 
-const activeLink=(isActive)=> (isActive ? `${styles.active}`
+const activeLink=({isActive})=> (isActive ? `${styles.active}`
 :" ")
 
 const Navbar = () => {
@@ -30,8 +30,8 @@ const Navbar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/admin/add-products" className={activeLink}>
-              Add Products
+            <NavLink to="/admin/add-product" className={activeLink}>
+              Add Product
             </NavLink>
           </li>
           <li>
