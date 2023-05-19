@@ -2,6 +2,8 @@
 import React, { useState } from 'react'
 import styles from "./AddProduct.module.scss"
 import Card from "../../card/Card"
+import { ref, uploadBytesResumable } from "firebase/storage";
+import {storage} from "../../../firebase/config"
 
 const categories = [
   { id:1, name: "Laptop"}, 
@@ -19,14 +21,25 @@ const AddProduct = () => {
     desc: "",
 
   })
-  const handleInputChange = (e) => {};
-  const handleImageChange = (e) => {};
-
+  const handleInputChange = (e) => {
+    const {name, value} = e.target;
+    setProduct({...product,  [name]: value})
+  };
+  const handleImageChange = (e) => {
+    const file = e.target.files
+    //console.log(file)
+    const storageRef=ref(storage, `eshop/${Date.now()}${file.name}`)
+    const uploadTask=uploadBytesResumable(storageRef, file)
+  };
+  const addProduct=(e) => {
+    e.preventDefault();
+    console.log(product)
+  }
   return (
     <div className= {styles.product}>
       <h2>Add New Product</h2>
       <Card cardClass={styles.card}/>
-        <form>
+        <form onSubmit={addProduct}>
           <label>Product Name:</label>
           <input type="text" placeholder= "Product name" required
           name="name" value={product.name} onChange={(e) =>
@@ -40,7 +53,9 @@ const AddProduct = () => {
               </div>
             </div>
             <input type="file" accept="image/*" onChange={(e) => handleImageChange(e)}/>
-            <input type = "text" required value={product.imageURL}
+            <input type = "text"
+            //required
+            value={product.imageURL}
             placeholder="Image URL" name="imageURL" disabled/>
           </Card>
           <label>Product Price:</label>
