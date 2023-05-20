@@ -7,6 +7,7 @@ import {storage} from "../../../firebase/config"
 import { toast } from 'react-toastify';
 import Loader from "../../loader/Loader"
 
+
 const categories = [
   { id:1, name: "Laptop"}, 
   { id:2, name: "Electronics"}, 
@@ -59,8 +60,10 @@ const AddProduct = ()=>{
     console.log(product)
   }
   return (
+    <>
+    {isLoading && <Loader/>}
     <div className= {styles.product}>
-      <h2>Add New Product</h2>
+      <h2>{detectForm(id,"Add New Product","Edit Product")}</h2>
       <Card cardClass={styles.card}/>
         <form onSubmit={addProduct}>
           <label>Product Name:</label>
@@ -106,6 +109,7 @@ const AddProduct = ()=>{
           <button classsName="--btn --btn-primary">Save Product</button>
         </form>
     </div>
+    </>
   )
 }
 
