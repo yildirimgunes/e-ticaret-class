@@ -2,25 +2,28 @@
 import React, { useState } from 'react'
 import styles from "./AddProduct.module.scss"
 import Card from "../../card/Card"
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {storage} from "../../../firebase/config"
+import { toast } from 'react-toastify';
 
 const categories = [
   { id:1, name: "Laptop"}, 
   { id:2, name: "Electronics"}, 
   { id:3, name: "Fashion"}, 
-  { id:4, name: "Phone"}
+  { id:4, name: "Phone"},
 ]
-const AddProduct = () => {
-  const [product, setProduct] = useState ({
-    name: "",
-    imageUrl: "",
-    price: "",
-    category: "",
-    brand: "",
-    desc: "",
+const AddProduct = ()=>{
+  const [product, setProduct] = useState (()=>{
+    name:"",
+    imageURL:"",
+    price:0,
+    category:"",
+    brand:"",
+    desc:"",
 
   })
+  
+  const [uploadProgress, setupUploadProgress]=useState(0)
   const handleInputChange = (e) => {
     const {name, value} = e.target;
     setProduct({...product,  [name]: value})
@@ -28,8 +31,24 @@ const AddProduct = () => {
   const handleImageChange = (e) => {
     const file = e.target.files
     //console.log(file)
-    const storageRef=ref(storage, `eshop/${Date.now()}${file.name}`)
+    const storageRef=ref(storage, `eshop/${Date.now()}${
+    file.name}`)
     const uploadTask=uploadBytesResumable(storageRef, file)
+    uploadTask.on('state_changed', 
+  (snapshot) => {
+    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    setUploadProgress(progress)
+  }, 
+  (error) => {
+    toast.error(error.message)
+  }, 
+  () => {
+    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      setProduct({...product, imageURL : downloadURL})
+      toast.success("Image uploaded successfully")
+    });
+  }
+);
   };
   const addProduct=(e) => {
     e.preventDefault();
@@ -46,17 +65,19 @@ const AddProduct = () => {
           handleInputChange(e)}/>
           <label>Product image:</label>
           <Card cardClass={styles.group}>
-            <div className={styles.progres}>
+            {uploadProgress===0 ? null : (<div className={styles.progres}>
               <div className={styles["progres-bar"]} style={{
-              width: "50%"}}>
-                Uploading 50%
+              width: `${uploadProgress}%`}}>
+                {uploadProress<100 ? `Uploading $
+                {uploadProgress}%` : `Upload Complete $
+                {uploadProgress}%` }
               </div>
-            </div>
+            </div>)}
             <input type="file" accept="image/*" onChange={(e) => handleImageChange(e)}/>
-            <input type = "text"
-            //required
+            {product.imageURL === "" ? null : <input type = "text"
+            required
             value={product.imageURL}
-            placeholder="Image URL" name="imageURL" disabled/>
+            placeholder="Image URL" name="imageURL" disabled/>}
           </Card>
           <label>Product Price:</label>
           <input type="number" placeholder="Product Price"
