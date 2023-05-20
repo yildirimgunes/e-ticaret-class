@@ -5,6 +5,7 @@ import Card from "../../card/Card"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {storage} from "../../../firebase/config"
 import { toast } from 'react-toastify';
+import Loader from "../../loader/Loader"
 
 const categories = [
   { id:1, name: "Laptop"}, 
@@ -13,17 +14,20 @@ const categories = [
   { id:4, name: "Phone"},
 ]
 const AddProduct = ()=>{
-  const [product, setProduct] = useState (()=>{
-    name:"",
-    imageURL:"",
-    price:0,
-    category:"",
-    brand:"",
-    desc:"",
+  const initialState = {
+    name: "",
+    imageURL: "",
+    price: 0,
+    category: "",
+    brand: "",
+    desc: "",
+  }
+  const [product, setProduct] = useState(()=>{
 
   })
   
-  const [uploadProgress, setupUploadProgress]=useState(0)
+  const [uploadProgress,setUploadProgress] = useState(0)
+  const [isLoading,setIsLoading] = useState(false)
   const handleInputChange = (e) => {
     const {name, value} = e.target;
     setProduct({...product,  [name]: value})
@@ -65,12 +69,9 @@ const AddProduct = ()=>{
           handleInputChange(e)}/>
           <label>Product image:</label>
           <Card cardClass={styles.group}>
-            {uploadProgress===0 ? null : (<div className={styles.progres}>
-              <div className={styles["progres-bar"]} style={{
-              width: `${uploadProgress}%`}}>
-                {uploadProress<100 ? `Uploading $
-                {uploadProgress}%` : `Upload Complete $
-                {uploadProgress}%` }
+            {uploadProgress === 0 ? null : (<div className={styles.progress}>
+              <div className={styles["progress-bar"]} style={{width: `${uploadProgress}%`}}>
+              {uploadProgress < 100 ? `Uploading ${uploadProgress}%` : `Upload Complete ${uploadProgress}%`}
               </div>
             </div>)}
             <input type="file" accept="image/*" onChange={(e) => handleImageChange(e)}/>
