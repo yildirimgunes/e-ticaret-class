@@ -3,10 +3,9 @@ import React, { useState } from 'react'
 import styles from "./AddProduct.module.scss"
 import Card from "../../card/Card"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import {storage} from "../../../firebase/config"
-import { toast } from 'react-toastify';
-import Loader from "../../loader/Loader"
-
+import {db, storage} from "../../../firebase/config"
+import { toast } from 'react-toastify'
+import { addDoc, Timestamp, collection } from 'firebase/firestore';
 
 const categories = [
   { id:1, name: "Laptop"}, 
@@ -15,16 +14,13 @@ const categories = [
   { id:4, name: "Phone"},
 ]
 const AddProduct = ()=>{
-  const initialState = {
+  const [product, setProduct]= useState ({
     name: "",
     imageURL: "",
     price: 0,
     category: "",
     brand: "",
     desc: "",
-  }
-  const [product, setProduct] = useState(()=>{
-
   })
   
   const [uploadProgress,setUploadProgress] = useState(0)
@@ -57,13 +53,28 @@ const AddProduct = ()=>{
   };
   const addProduct=(e) => {
     e.preventDefault();
-    console.log(product)
+    //console.log(product)
+
+  try {
+    addDoc (collection (db, "products"), {
+      name: product.name,
+      imageURL: product.imageURL,
+      price: Number(product.price),
+      category: product.category,
+      brand: product.brand,
+      desc: product.desc,
+      createdAt: Timestamp.now().toDate()
+    })
+    toast.success("Product uploaded successfully")
+  }
+  catch (error) {
+    toast.error(error.message)}
+
   }
   return (
     <>
-    {isLoading && <Loader/>}
     <div className= {styles.product}>
-      <h2>{detectForm(id,"Add New Product","Edit Product")}</h2>
+      <h2>Add New Product</h2>
       <Card cardClass={styles.card}/>
         <form onSubmit={addProduct}>
           <label>Product Name:</label>
