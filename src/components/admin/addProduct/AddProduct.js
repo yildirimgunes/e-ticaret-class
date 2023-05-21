@@ -36,7 +36,7 @@ const AddProduct = ()=>{
     setProduct({...product,  [name]: value})
   };
   const handleImageChange = (e) => {
-    const file = e.target.files
+    const file = e.target.files[0]
     //console.log(file)
     const storageRef=ref(storage, `eshop/${Date.now()}${
     file.name}`)
@@ -52,7 +52,7 @@ const AddProduct = ()=>{
   () => {
     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
       setProduct({...product, imageURL : downloadURL})
-      toast.success("Image uploaded successfully")
+      toast.success("Image uploaded successfully.")
     });
   }
 );
@@ -62,7 +62,7 @@ const AddProduct = ()=>{
     //console.log(product)
     setIsLoading(true)
   try {
-    addDoc (collection, (db, "products"), {
+    addDoc (collection(db, "products"), {
       name: product.name,
       imageURL: product.imageURL,
       price: Number(product.price),
@@ -79,25 +79,24 @@ const AddProduct = ()=>{
   }
   catch (error) {
     setIsLoading(false)
-    toast.error(error.message)}
-
+    toast.error(error.message)
   }
+}
   return (
     <>
     {isLoading && <Loader/>}
     <div className= {styles.product}>
       <h2>Add New Product</h2>
-      <Card cardClass={styles.card}/>
+      <Card cardClass={styles.card}>
         <form onSubmit={addProduct}>
           <label>Product Name:</label>
-          <input type="text" placeholder= "Product name" required
-          name="name" value={product.name} onChange={(e) =>
-          handleInputChange(e)}/>
+          <input type="text" placeholder= "Product name" required name="name" value={product.name} onChange={(e) => handleInputChange(e)}/>
           <label>Product image:</label>
           <Card cardClass={styles.group}>
-            {uploadProgress === 0 ? null : (<div className={styles.progress}>
+            {uploadProgress === 0 ? null : (
+            <div className={styles.progress}>
               <div className={styles["progress-bar"]} style={{width: `${uploadProgress}%`}}>
-              {uploadProgress < 100 ? `Uploading ${uploadProgress}%` : `Upload Complete ${uploadProgress}%`}
+              {uploadProgress < 100 ? `Uploading ${uploadProgress}%` : `$ {uploadProgress}%`}
               </div>
             </div>)}
             <input type="file" accept="image/*" onChange={(e) => handleImageChange(e)}/>
@@ -108,8 +107,7 @@ const AddProduct = ()=>{
           </Card>
           <label>Product Price:</label>
           <input type="number" placeholder="Product Price"
-          required name="price" value={product.price} onChange=
-          {(e) => handleInputChange(e)} />
+          required name="price" value={product.price} onChange={(e) => handleInputChange(e)}/>
           <label>Product Category:</label>
           <select reqired name= "category" value={product.category} onChange={(e) => handleInputChange(e)}>
             <option value="" disabled>
@@ -124,13 +122,12 @@ const AddProduct = ()=>{
             })}
           </select>
           <label>Product Company/Brand:</label>
-          <input type="text" placeholder="Product brand" required
-          name="brand" value={product.brand} onChange={(e) =>
-          handleInputChange(e)}/>
+          <input type="text" placeholder="Product brand" required name="brand" value={product.brand} onChange={(e) => handleInputChange(e)}/>
           <label>Production Description:</label>
-          <textarea name="decs" value={product.desc} onChange={(e) =>handleInputChange(e)} cols="30" rows="10"></textarea>
+          <textarea name="desc" value={product.desc} onChange={(e) =>handleInputChange(e)} cols="30" rows="10"></textarea>
           <button classsName="--btn --btn-primary">Save Product</button>
         </form>
+      </Card>
     </div>
     </>
   )
