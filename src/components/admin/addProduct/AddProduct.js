@@ -6,6 +6,8 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {db, storage} from "../../../firebase/config"
 import { toast } from 'react-toastify'
 import { addDoc, Timestamp, collection } from 'firebase/firestore';
+import Loader from "../../loader/Loader"
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
   { id:1, name: "Laptop"}, 
@@ -14,17 +16,21 @@ const categories = [
   { id:4, name: "Phone"},
 ]
 const AddProduct = ()=>{
-  const [product, setProduct]= useState ({
+  const initialState = {
     name: "",
     imageURL: "",
     price: 0,
     category: "",
     brand: "",
-    desc: "",
+    desc: "", 
+  }
+  const [product, setProduct]= useState ({
+    ...initialState
   })
   
   const [uploadProgress,setUploadProgress] = useState(0)
   const [isLoading,setIsLoading] = useState(false)
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const {name, value} = e.target;
     setProduct({...product,  [name]: value})
@@ -54,9 +60,9 @@ const AddProduct = ()=>{
   const addProduct=(e) => {
     e.preventDefault();
     //console.log(product)
-
+    setIsLoading(true)
   try {
-    addDoc (collection (db, "products"), {
+    addDoc (collection, (db, "products"), {
       name: product.name,
       imageURL: product.imageURL,
       price: Number(product.price),
@@ -65,14 +71,20 @@ const AddProduct = ()=>{
       desc: product.desc,
       createdAt: Timestamp.now().toDate()
     })
+    setIsLoading(false)
+    setUploadProgress(0)
+    setProduct({...initialState})
     toast.success("Product uploaded successfully")
+    navigate("/admin/all-products")
   }
   catch (error) {
+    setIsLoading(false)
     toast.error(error.message)}
 
   }
   return (
     <>
+    {isLoading && <Loader/>}
     <div className= {styles.product}>
       <h2>Add New Product</h2>
       <Card cardClass={styles.card}/>
